@@ -10,9 +10,9 @@ public class Wget {
                         int index = 0;
                         while (index <= 100) {
                             System.out.print("\rLoading : " + index++ + "%");
-                            Thread.sleep(1000);
+                            Thread.sleep(100);
                         }
-                        System.out.print("\nLoaded.");
+                        System.out.print(System.lineSeparator() + "Loaded.");
                     } catch (InterruptedException exception) {
                         exception.printStackTrace();
                     }
