@@ -1,4 +1,4 @@
-package ru.job4j.synchronize.threadSafe;
+package ru.job4j.synchronize.threadsafe;
 
 import org.junit.jupiter.api.Test;
 
