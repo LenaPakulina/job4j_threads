@@ -21,13 +21,20 @@ public class SimpleBlockingQueue<T> {
 
     public T poll() throws InterruptedException {
         T element = null;
-        while ((element = getSynchElement()) == null) {
-            wait();
+        while (element == null) {
+            synchronized (queue) {
+                element = queue.poll();
+            }
+            if (element == null) {
+                synchronized (this) {
+                    this.wait();
+                }
+            }
         }
         return element;
     }
 
-    private synchronized T getSynchElement() {
-        return queue.poll();
+    public synchronized boolean isEmpty() {
+        return queue.isEmpty();
     }
 }
