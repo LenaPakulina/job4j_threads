@@ -5,6 +5,7 @@ import net.jcip.annotations.ThreadSafe;
 
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Random;
 
 @ThreadSafe
 public class SimpleBlockingQueue<T> {
@@ -12,10 +13,10 @@ public class SimpleBlockingQueue<T> {
     @GuardedBy("this")
     private Queue<T> queue = new LinkedList<>();
 
-    int count = 0;
+    private int count = 0;
 
     public SimpleBlockingQueue() {
-        this.count = 10;
+        this.count = new Random().nextInt(2, 10);
     }
 
     public SimpleBlockingQueue(int count) {
@@ -23,10 +24,15 @@ public class SimpleBlockingQueue<T> {
     }
 
     public synchronized void offer(T value) {
-        if (queue.size() < count) {
-            queue.offer(value);
-            notifyAll();
+        while (queue.size() >= count) {
+            try {
+                this.wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
         }
+        queue.offer(value);
+        notifyAll();
     }
 
     public synchronized T poll() throws InterruptedException {
