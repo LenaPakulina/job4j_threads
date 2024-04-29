@@ -15,7 +15,13 @@ class SimpleBlockingQueueTest {
     public void checkPoll() throws InterruptedException {
         SimpleBlockingQueue<Integer> queue = new SimpleBlockingQueue<>();
         final Integer[] result = new Integer[1];
-        Thread producer  = new Thread(() -> queue.offer(5));
+        Thread producer  = new Thread(() -> {
+            try {
+                queue.offer(5);
+            } catch (InterruptedException exception) {
+                Thread.currentThread().interrupt();
+            }
+        });
         Thread consumer = new Thread(() -> {
             try {
                 result[0] = queue.poll();
@@ -36,9 +42,13 @@ class SimpleBlockingQueueTest {
         final SimpleBlockingQueue<Integer> queue = new SimpleBlockingQueue<>();
         Thread producer = new Thread(
                 () -> {
-                    IntStream.range(0, 5).forEach(
-                            queue::offer
-                    );
+                    try {
+                        for (int i = 0; i < 5; i++) {
+                            queue.offer(i);
+                        }
+                    } catch (InterruptedException exception) {
+                        Thread.currentThread().interrupt();
+                    }
                 }
         );
         producer.start();

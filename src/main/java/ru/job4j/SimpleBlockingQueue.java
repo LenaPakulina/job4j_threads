@@ -7,29 +7,31 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Random;
 
+/**
+ * В SimpleBlockingQueue по умолчанию создается пул размером 10
+ */
+
 @ThreadSafe
 public class SimpleBlockingQueue<T> {
 
     @GuardedBy("this")
     private Queue<T> queue = new LinkedList<>();
 
+    private final static int DEFAULT_POOL_SIZE = 10;
+
     private int count = 0;
 
     public SimpleBlockingQueue() {
-        this.count = new Random().nextInt(2, 10);
+        this.count = DEFAULT_POOL_SIZE;
     }
 
     public SimpleBlockingQueue(int count) {
         this.count = count;
     }
 
-    public synchronized void offer(T value) {
+    public synchronized void offer(T value) throws InterruptedException {
         while (queue.size() >= count) {
-            try {
-                this.wait();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
+            this.wait();
         }
         queue.offer(value);
         notifyAll();
