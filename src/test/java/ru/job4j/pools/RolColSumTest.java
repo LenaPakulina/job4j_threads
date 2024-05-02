@@ -32,55 +32,53 @@ public class RolColSumTest {
     public void whenCheckSimpleMatrixSync() {
         RolColSum rolColSum = new RolColSum();
         long startTime = System.nanoTime();
-        RolColSum.Sums[] result = rolColSum.sum(array3);
+        Sums[] result = rolColSum.sum(array3);
         long endTime = System.nanoTime();
         long duration = (endTime - startTime);
         System.out.printf("Time sync array3 = %d%n", duration);
-        assertThat(result[0].getColSum()).isEqualTo(12);
-        assertThat(result[0].getRowSum()).isEqualTo(6);
-        assertThat(result[1].getColSum()).isEqualTo(15);
-        assertThat(result[1].getRowSum()).isEqualTo(15);
-        assertThat(result[2].getColSum()).isEqualTo(18);
-        assertThat(result[2].getRowSum()).isEqualTo(24);
+        Sums[] expected = {
+                new Sums(6, 12),
+                new Sums(15, 15),
+                new Sums(24, 18)
+        };
+        assertThat(result).isEqualTo(expected);
     }
 
     @Test
     public void whenCheckSimpleMatrixAsync() throws ExecutionException, InterruptedException {
         RolColSum rolColSum = new RolColSum();
         long startTime = System.nanoTime();
-        RolColSum.Sums[] result = rolColSum.asyncSum(array3);
+        Sums[] result = rolColSum.asyncSum(array3);
         long endTime = System.nanoTime();
         long duration = (endTime - startTime);
         System.out.printf("Time async array3 = %d%n", duration);
-        assertThat(result[0].getColSum()).isEqualTo(12);
-        assertThat(result[0].getRowSum()).isEqualTo(6);
-        assertThat(result[1].getColSum()).isEqualTo(15);
-        assertThat(result[1].getRowSum()).isEqualTo(15);
-        assertThat(result[2].getColSum()).isEqualTo(18);
-        assertThat(result[2].getRowSum()).isEqualTo(24);
+        Sums[] expected = {
+                new Sums(6, 12),
+                new Sums(15, 15),
+                new Sums(24, 18)
+        };
+        assertThat(result).isEqualTo(expected);
     }
 
     @Test
     public void whenCheckMatrixSync() {
         RolColSum rolColSum = new RolColSum();
         long startTime = System.nanoTime();
-        RolColSum.Sums[] result = rolColSum.sum(array500);
+        Sums[] result = rolColSum.sum(array500);
         long endTime = System.nanoTime();
         long duration = (endTime - startTime);
         System.out.printf("Time sync array10 = %d%n", duration);
-        assertThat(result[0].getRowSum()).isEqualTo(125250);
-        assertThat(result[0].getColSum()).isEqualTo(62375500);
+        assertThat(result[0]).isEqualTo(new Sums(125250, 62375500));
     }
 
     @Test
     public void whenCheckMatrixAsync() throws ExecutionException, InterruptedException {
         RolColSum rolColSum = new RolColSum();
         long startTime = System.nanoTime();
-        RolColSum.Sums[] result = rolColSum.asyncSum(array500);
+        Sums[] result = rolColSum.asyncSum(array500);
         long endTime = System.nanoTime();
         long duration = (endTime - startTime);
         System.out.printf("Time async array10 = %d%n", duration);
-        assertThat(result[0].getRowSum()).isEqualTo(125250);
-        assertThat(result[0].getColSum()).isEqualTo(62375500);
+        assertThat(result[0]).isEqualTo(new Sums(125250, 62375500));
     }
 }
